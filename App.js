@@ -14,14 +14,20 @@ export default function App() {
     },[rolls])
     
     function besScore(array){
+        let bestScore;
         const minString =JSON.parse(localStorage.getItem(array))
-        const bestScore= minString[0]
-        for(let i=1; i< minString.length ; i++){
-            if(minString[i]< bestScore){
-                bestScore= minString[i]
-            }
-        }
-        return `Best Score ${bestScore} rolls`
+        if(minString.length>0){
+               bestScore= minString[0]
+               for(let i=1; i< minString.length ; i++){
+                    if(minString[i]< bestScore){
+                      bestScore= minString[i]
+                       }
+                 }     
+           }
+           else{
+            bestScore= rollCount
+              }
+        return `Best Score ${bestScore} rolls`     
     }
     React.useEffect(() => {
         const allHeld = dice.every(die => die.isHeld)
@@ -48,7 +54,6 @@ export default function App() {
     }
     
     const [rollCount, setRollCount] = React.useState(0)
- 
     function rollDice() {
         if(!tenzies) {
             setRollCount(oldCount => oldCount+1)
@@ -70,11 +75,12 @@ export default function App() {
     function holdDice(id) {
         setDice(oldDice => oldDice.map(die => {
             return die.id === id ? 
-                {...die, isHeld: !die.isHeld} :
+                {    id: die.id,
+                     value : die.value,
+                     isHeld: !die.isHeld} :
                 die
         }))
     }
-    
     const diceElements = dice.map(die => (
         <Die 
             key={die.id} 
@@ -84,7 +90,6 @@ export default function App() {
         />
     ))
         const [tenzies, setTenzies] = React.useState(false)
-        
         var duration=[]
 
         function time(){
@@ -93,6 +98,7 @@ export default function App() {
             duration.push(time)
             return time
         }
+        
     return (
         <main>
             {tenzies && <Confetti />}
